@@ -2,86 +2,72 @@ import { getImage } from 'Services/GetImage';
 import ErrorCard from 'components/ErrorCard/ErrorCard';
 import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
 import Loader from 'components/Loader/Loader';
-import { Component } from 'react';
 import { ImageItem, ImageList } from './ImageGallery.styled';
 import Button from 'components/Button/Button';
 import Modal from 'components/Modal/Modal';
+import { useEffect, useState } from 'react';
 
-const STATUS = {
-  IDLE: 'idle',
-  PENDING: 'pending',
-  RESOLVED: 'resolved',
-  REJECTED: 'rejected',
+
+const ImageGallery =({searchText})=> {
+  const STATUS = {
+    IDLE: 'idle',
+    PENDING: 'pending',
+    RESOLVED: 'resolved',
+    REJECTED: 'rejected',
+  };
+  
+const [images, setImages]=useState([]);
+const [status, setStatus]=useState(STATUS.IDLE);
+const [currentPage, setCurrentPage]=useState(1);
+const [largeImageURL, setLargeImageURL]=useState("");
+const [isShowModal, setIsShowModal]=useState(false);
+const [tags, setTags]=useState("");
+const [totalPages, setTotalPages]=useState(0);
+
+useEffect(()=>{  
+
+  requestImages(searchText, currentPage);
+
+}, [searchText, currentPage]);
+
+const requestImages = async (searchText, currentPage) => {
+  try {      
+    const data = await getImage(
+      searchText,
+      currentPage
+    );
+
+    if (currentPage === 1) {
+      setImages(data.data.hits);
+      setStatus(STATUS.RESOLVED);
+      setTotalPages(data.data.totalHits);
+      console.log(images);
+      
+    } else {
+      setImages(prevState=>([...prevState,...data.data.hits]));
+      setStatus(STATUS.RESOLVED);
+      console.log(images);
+      
+    }
+  } catch (err) {
+    setStatus(STATUS.REJECTED);    
 };
-class ImageGallery extends Component {
-  state = {
-    images: [],
-    status: STATUS.IDLE,
-    currentPage: 1,
-    largeImageURL: '',
-    isShowModal: false,
-    tags: '',
-    totalPages: 0,
-    idFetching: false,
+}
+
+  const loadMoreImages = () => {
+    setCurrentPage(prevPage=>prevPage+1);   
   };
 
-  async componentDidUpdate(prevProps, prevState) {
-    if (
-      prevProps.searchText !== this.props.searchText ||
-      prevState.currentPage !== this.state.currentPage
-    ) {
-      this.requestImages();
-    }
-  }
-
-  requestImages = async () => {
-    try {
-      this.setState(() => ({ isFetching: true }));
-      const data = await getImage(
-        this.props.searchText,
-        this.state.currentPage
-      );
-
-      if (this.state.currentPage === 1) {
-        this.setState({
-          images: data.data.hits,
-          status: STATUS.RESOLVED,
-          totalPages: data.data.totalHits,
-        });
-      } else {
-        this.setState(prevState => ({
-          images: [...prevState.images, ...data.data.hits],
-          status: STATUS.RESOLVED,
-        }));
-      }
-    } catch (err) {
-      this.setState({ status: STATUS.REJECTED });
-    } finally {
-      this.setState(() => ({ isFetching: false }));
-    }
+  const toggleModal = () => {
+    setIsShowModal(!isShowModal);    
   };
 
-  loadMoreImages = () => {
-    this.setState(prevState => ({ currentPage: prevState.currentPage + 1 }));
+  const showImage = id => {
+    setLargeImageURL(images.find(image=>image.id===id).largeImageURL);
+    setTags(images.find(image=>image.id===id).tags)    
   };
-
-  toggleModal = () => {
-    this.setState(({ isShowModal }) => ({
-      isShowModal: !isShowModal,
-    }));
-  };
-
-  showImage = id => {
-    this.setState(({ largeImageURL, tags }) => ({
-      largeImageURL: this.state.images.find(image => image.id === id)
-        .largeImageURL,
-      tags: this.state.images.find(image => image.id === id).tags,
-    }));
-  };
-
-  render() {
-    const { images, status } = this.state;
-
+  
+    
     if (status === STATUS.PENDING) return <Loader />;
     else if (status === STATUS.RESOLVED) {
       return (
@@ -89,28 +75,29 @@ class ImageGallery extends Component {
           <ImageList>
             {images.map(el => (
               <ImageItem key={el.id}>
-                {this.state.isShowModal && (
-                  <Modal closeModal={this.toggleModal}>
-                    <img src={this.state.largeImageURL} alt={this.state.tags} />
+                {isShowModal && (
+                  <Modal closeModal={toggleModal}>
+                    <img src={largeImageURL} alt={tags} />
                   </Modal>
                 )}
 
                 <ImageGalleryItem
                   webformatURL={el.webformatURL}
                   tags={el.tags}
-                  showModal={this.toggleModal}
-                  showImage={this.showImage}
+                  showModal={toggleModal}
+                  showImage={showImage}
                   id={el.id}
                 />
               </ImageItem>
             ))}
           </ImageList>
 
-          <Button loadMoreImages={this.loadMoreImages} />
+          <Button loadMoreImages={loadMoreImages} />
         </>
       );
     } else if (status === STATUS.REJECTED) return <ErrorCard />;
-  }
+  
 }
+
 
 export default ImageGallery;
