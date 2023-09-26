@@ -1,4 +1,3 @@
-import { Component } from 'react';
 import { FcSearch } from 'react-icons/fc';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState } from 'react';
