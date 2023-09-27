@@ -2,18 +2,16 @@ import { FcSearch } from 'react-icons/fc';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState } from 'react';
 
-const SearchBar = ({ handleSearch}) => {
+const SearchBar = ({ handleSearch }) => {
   const [query, setQuery] = useState('');
 
   const handleChange = ({ target: { value } }) => {
     setQuery(value);
-    
   };
 
   const handleSubmit = e => {
     e.preventDefault();
     handleSearch(query);
-    setQuery('');
   };
 
   return (
