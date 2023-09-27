@@ -22,17 +22,6 @@ const ImageGallery = ({ searchText }) => {
   const [isShowModal, setIsShowModal] = useState(false);
   const [tags, setTags] = useState('');
 
-
-  useEffect(() => {
-    requestImages(searchText);
-    setCurrentPage(1);
-    setImages([]);
-  }, [searchText]);
-
-  useEffect(() => {
-    requestImages(searchText, currentPage);
-  }, [currentPage]);
-
   const requestImages = async (searchText, currentPage = 1) => {
 
     if (searchText === '') return;
@@ -55,6 +44,18 @@ const ImageGallery = ({ searchText }) => {
     }
     
   };
+
+  useEffect(() => {
+    requestImages(searchText);
+    setCurrentPage(1);
+    setImages([]);
+  }, [searchText]);
+
+  useEffect(() => {
+    requestImages(searchText, currentPage);
+  }, [currentPage]);
+
+  
 
   const loadMoreImages = () => {
    
