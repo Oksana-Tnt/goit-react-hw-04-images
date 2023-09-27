@@ -21,33 +21,43 @@ const ImageGallery = ({ searchText }) => {
   const [largeImageURL, setLargeImageURL] = useState('');
   const [isShowModal, setIsShowModal] = useState(false);
   const [tags, setTags] = useState('');
-  const [totalPages, setTotalPages] = useState(0);
+
+
+  useEffect(() => {
+    requestImages(searchText);
+    setCurrentPage(1);
+    setImages([]);
+  }, [searchText]);
 
   useEffect(() => {
     requestImages(searchText, currentPage);
-  }, [searchText, currentPage]);
+  }, [currentPage]);
 
-  const requestImages = async (searchText, currentPage) => {
+  const requestImages = async (searchText, currentPage = 1) => {
+
     if (searchText === '') return;
-    try {
-      const data = await getImage(searchText, currentPage);
 
+    try {
+    
+      const data = await getImage(searchText, currentPage);
+      
       if (currentPage === 1) {
+        setStatus(STATUS.PENDING);
         setImages(data.data.hits);
         setStatus(STATUS.RESOLVED);
-        setTotalPages(data.data.totalHits);
-        console.log(images);
       } else {
         setImages(prevState => [...prevState, ...data.data.hits]);
         setStatus(STATUS.RESOLVED);
-        console.log(images);
       }
+      
     } catch (err) {
       setStatus(STATUS.REJECTED);
     }
+    
   };
 
   const loadMoreImages = () => {
+   
     setCurrentPage(prevPage => prevPage + 1);
   };
 
