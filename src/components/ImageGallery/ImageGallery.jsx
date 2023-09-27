@@ -47,11 +47,18 @@ const ImageGallery = ({ searchText }) => {
   };
 
   useEffect(() => {
+
+    requestImages(searchText);
+    setImages([]);
+    setCurrentPage(1);   
+
+  }, [searchText]);
+
+  useEffect(() => {
+
     requestImages(searchText, currentPage);
 
   }, [searchText, currentPage]);
-
-  
 
   const loadMoreImages = () => {
    
