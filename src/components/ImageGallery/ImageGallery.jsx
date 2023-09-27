@@ -53,7 +53,7 @@ const ImageGallery = ({ searchText }) => {
     setImages([]);
     setCurrentPage(1);   
 
-  }, [searchText]);
+  }, [searchText, STATUS.PENDING, STATUS.RESOLVED, STATUS.REJECTED]);
 
   useEffect(() => {
     const requestImages = async (searchText, currentPage = 1) => {
@@ -82,7 +82,7 @@ const ImageGallery = ({ searchText }) => {
 
      requestImages(searchText, currentPage);
 
-  }, [searchText, currentPage]);
+  }, [searchText, currentPage, STATUS.PENDING, STATUS.RESOLVED, STATUS.REJECTED]);
 
   const loadMoreImages = () => {
    
