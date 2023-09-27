@@ -33,6 +33,7 @@ const ImageGallery = ({ searchText }) => {
       if (currentPage === 1) {
         setStatus(STATUS.PENDING);
         setImages(data.data.hits);
+
         setStatus(STATUS.RESOLVED);
       } else {
         setImages(prevState => [...prevState, ...data.data.hits]);
@@ -46,14 +47,9 @@ const ImageGallery = ({ searchText }) => {
   };
 
   useEffect(() => {
-    requestImages(searchText);
-    setCurrentPage(1);
-    setImages([]);
-  }, [searchText]);
-
-  useEffect(() => {
     requestImages(searchText, currentPage);
-  }, [currentPage]);
+
+  }, [searchText, currentPage]);
 
   
 
