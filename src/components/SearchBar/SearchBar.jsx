@@ -12,6 +12,7 @@ const SearchBar = ({ handleSearch }) => {
   const handleSubmit = e => {
     e.preventDefault();
     handleSearch(query);
+    setQuery('');
   };
 
   return (
