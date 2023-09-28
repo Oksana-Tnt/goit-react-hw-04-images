@@ -22,70 +22,42 @@ const ImageGallery = ({ searchText }) => {
   const [isShowModal, setIsShowModal] = useState(false);
   const [tags, setTags] = useState('');
 
- 
-
   useEffect(() => {
-    const requestImages = async (searchText, currentPage = 1) => {
-
-      if (searchText === '') return;
-  
-      try {
-      
-        const data = await getImage(searchText, currentPage);
-        
-        if (currentPage === 1) {
-          setStatus(STATUS.PENDING);
-          setImages(data.data.hits);
-  
-          setStatus(STATUS.RESOLVED);
-        } else {
-          setImages(prevState => [...prevState, ...data.data.hits]);
-          setStatus(STATUS.RESOLVED);
-        }
-        
-      } catch (err) {
-        setStatus(STATUS.REJECTED);
-      }
-      
-    };
-
-     requestImages(searchText);
     setImages([]);
-    setCurrentPage(1);   
-
-  }, [searchText, STATUS.PENDING, STATUS.RESOLVED, STATUS.REJECTED]);
+    setCurrentPage(1);
+  }, [searchText]);
 
   useEffect(() => {
     const requestImages = async (searchText, currentPage = 1) => {
-
       if (searchText === '') return;
-  
+
       try {
-      
         const data = await getImage(searchText, currentPage);
-        
+
         if (currentPage === 1) {
           setStatus(STATUS.PENDING);
           setImages(data.data.hits);
-  
+
           setStatus(STATUS.RESOLVED);
         } else {
           setImages(prevState => [...prevState, ...data.data.hits]);
           setStatus(STATUS.RESOLVED);
         }
-        
       } catch (err) {
         setStatus(STATUS.REJECTED);
       }
-      
     };
 
-     requestImages(searchText, currentPage);
-
-  }, [searchText, currentPage, STATUS.PENDING, STATUS.RESOLVED, STATUS.REJECTED]);
+    requestImages(searchText, currentPage);
+  }, [
+    searchText,
+    currentPage,
+    STATUS.PENDING,
+    STATUS.RESOLVED,
+    STATUS.REJECTED,
+  ]);
 
   const loadMoreImages = () => {
-   
     setCurrentPage(prevPage => prevPage + 1);
   };
 
