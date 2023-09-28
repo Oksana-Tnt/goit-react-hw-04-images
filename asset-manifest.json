@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/goit-react-hw-04-images/static/css/main.879727ea.css",
-    "main.js": "/goit-react-hw-04-images/static/js/main.f1efb570.js",
+    "main.js": "/goit-react-hw-04-images/static/js/main.cfa55ea1.js",
     "static/media/saddest-cat-luhu-maggie-liu-lanlan731-38-59c0bfed09657__700.jpg": "/goit-react-hw-04-images/static/media/saddest-cat-luhu-maggie-liu-lanlan731-38-59c0bfed09657__700.6315ca9129ebbaad9c96.jpg",
     "index.html": "/goit-react-hw-04-images/index.html",
     "main.879727ea.css.map": "/goit-react-hw-04-images/static/css/main.879727ea.css.map",
-    "main.f1efb570.js.map": "/goit-react-hw-04-images/static/js/main.f1efb570.js.map"
+    "main.cfa55ea1.js.map": "/goit-react-hw-04-images/static/js/main.cfa55ea1.js.map"
   },
   "entrypoints": [
     "static/css/main.879727ea.css",
-    "static/js/main.f1efb570.js"
+    "static/js/main.cfa55ea1.js"
   ]
 }
